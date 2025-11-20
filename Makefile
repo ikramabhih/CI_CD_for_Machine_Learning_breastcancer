@@ -21,11 +21,11 @@ update-branch:
 	git commit -am "Update with new results"
 	git push --force origin HEAD:update
 
-hf-login: 
-	pip install -U "huggingface_hub[cli]"
-	# Crée ou switch vers la branche update
-	git switch -C update || git switch update
-	huggingface-cli login --token $(HF) --add-to-git-credential
+hf-login:
+    git pull origin update
+    git switch -C update || git switch update
+    pip install --upgrade huggingface_hub
+    python -m huggingface_hub login --token $(HF)
 
 push-hub: 
 	huggingface-cli upload ./App --repo-id=ikram-abhih-2021/Breast-Cancer-Classification --repo-type=space --commit-message="Sync App files"
