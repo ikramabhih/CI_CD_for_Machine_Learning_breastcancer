@@ -26,7 +26,7 @@ update-branch:
 hf-login: 
 	git pull origin update
 	git switch -C update || git switch update
-    pip install --upgrade huggingface_hub
+	pip install --upgrade huggingface_hub
 	export PATH=$HOME/.local/bin:$$PATH
 	huggingface-cli login --token $(HF)
 
