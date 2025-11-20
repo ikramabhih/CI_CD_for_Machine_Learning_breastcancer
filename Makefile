@@ -24,16 +24,17 @@ update-branch:
 	git push --force origin HEAD:update
 
 hf-login: 
-	pip install -U "huggingface_hub[cli]"
 	git pull origin update
-	git switch update
-	huggingface-cli login --token $(HF) --add-to-git-credential
+	git switch -C update || git switch update
+	pip install --upgrade huggingface_hub
+	python -m huggingface_hub login --token $(HF)
 
 push-hub: 
-	huggingface-cli upload ikram-abhih-2021/Breast-Cancer-Classification ./App --repo-type=space --commit-message="Sync App files"
-	huggingface-cli upload ikram-abhih-2021/Breast-Cancer-Classification ./Model /Model --repo-type=space --commit-message="Sync Model"
-	huggingface-cli upload ikram-abhih-2021/Breast-Cancer-Classification ./Results /Metrics --repo-type=space --commit-message="Sync Model"
+	python -m huggingface_hub upload ./App --repo-id ikram-abhih-2021/Breast-Cancer-Classification --repo-type space --commit-message "Sync App files"
+	python -m huggingface_hub upload ./Model --repo-id ikram-abhih-2021/Breast-Cancer-Classification --repo-type space --commit-message "Sync Model"
+	python -m huggingface_hub upload ./Results --repo-id ikram-abhih-2021/Breast-Cancer-Classification --repo-type space --commit-message "Sync Results"
 
 deploy: hf-login push-hub
+
 
 all: install format train eval update-branch deploy
