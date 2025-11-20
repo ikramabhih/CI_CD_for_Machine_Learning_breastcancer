@@ -1,3 +1,2 @@
-Model evaluation on Breast Cancer dataset:
-- Accuracy: 0.95
-- F1 Score: 0.95
+
+Accuracy = 0.97, F1 Score = 0.97

@@ -3,7 +3,12 @@ import skops.io as sio
 from sklearn.compose import ColumnTransformer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.impute import SimpleImputer
-from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, ConfusionMatrixDisplay
+from sklearn.metrics import (
+    accuracy_score,
+    f1_score,
+    confusion_matrix,
+    ConfusionMatrixDisplay,
+)
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OrdinalEncoder, StandardScaler
 from sklearn.model_selection import train_test_split
@@ -25,7 +30,9 @@ X = df.drop(columns=["diagnosis"])
 y = df["diagnosis"]
 
 # Train/Test split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=125)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=125
+)
 
 # Identifier les colonnes numériques et catégorielles
 num_cols = X_train.select_dtypes(include="number").columns.tolist()
@@ -34,19 +41,27 @@ cat_cols = X_train.select_dtypes(include="object").columns.tolist()
 # Préprocessing
 preprocess = ColumnTransformer(
     transformers=[
-        ("num", Pipeline([
-            ("imputer", SimpleImputer(strategy="median")),
-            ("scaler", StandardScaler())
-        ]), num_cols),
-        ("cat", OrdinalEncoder(), cat_cols)
+        (
+            "num",
+            Pipeline(
+                [
+                    ("imputer", SimpleImputer(strategy="median")),
+                    ("scaler", StandardScaler()),
+                ]
+            ),
+            num_cols,
+        ),
+        ("cat", OrdinalEncoder(), cat_cols),
     ]
 )
 
 # Pipeline complet
-pipe = Pipeline([
-    ("preprocessing", preprocess),
-    ("model", RandomForestClassifier(n_estimators=10, random_state=125))
-])
+pipe = Pipeline(
+    [
+        ("preprocessing", preprocess),
+        ("model", RandomForestClassifier(n_estimators=10, random_state=125)),
+    ]
+)
 
 # Entraîner le modèle
 pipe.fit(X_train, y_train)
