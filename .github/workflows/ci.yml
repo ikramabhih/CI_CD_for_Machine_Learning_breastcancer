@@ -1,45 +1,25 @@
 name: Continuous Integration
-
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-  workflow_dispatch:  # permet de déclencher manuellement
-
-permissions: write-all  # nécessaire pour que CML poste des commentaires
-
+  workflow_dispatch:
+  
+permissions: write-all
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      # Checkout du dépôt
       - uses: actions/checkout@v3
-
-      # Installer CML pour les commentaires et métriques
       - uses: iterative/setup-cml@v2
-
-      # Installer les dépendances
       - name: Install Packages
         run: make install
-
-      # Formatage du code
       - name: Format
         run: make format
-
-      # Training du modèle
       - name: Train
         run: make train
-
-      # Évaluation du modèle
       - name: Evaluation
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: make eval
-
-      # Mise à jour de la branche update
-      - name: Update Branch
-        env:
-          NAME: ${{ secrets.USER_NAME }}
-          EMAIL: ${{ secrets.USER_EMAIL }}
-        run: make update-branch USER_NAME=$NAME USER_EMAIL=$EMAIL
