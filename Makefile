@@ -16,19 +16,10 @@ eval:
 	cml comment create report.md || true
 
 update-branch:
-	# Valeurs par défaut si secrets absents
-	USER_NAME?=ikramabhih
-	USER_EMAIL?=i.abhih9312@uca.ac.ma
-	git config --global user.name "$(USER_NAME)"
-	git config --global user.email "$(USER_EMAIL)"
-	# Commit seulement s'il y a des changements
-	if [ -n "$$(git status --porcelain)" ]; then \
-		git add . ; \
-		git commit -m "Update with new results"; \
-		git push --force origin HEAD:update; \
-	else \
-		echo "No changes to commit"; \
-	fi
+	git config --global user.name $(USER_NAME)
+	git config --global user.email $(USER_EMAIL)
+	git commit -am "Update with new results"
+	git push --force origin HEAD:update
 
 hf-login: 
 	pip install -U "huggingface_hub[cli]"
